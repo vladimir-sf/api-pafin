@@ -4,17 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prepare": "echo 'Adding husky hooks' && husky install",
     "build": "rimraf ./dist && tsc",
-    "prestart": "npm run build",
+    "prestart": "echo 'Preparing project before start' && npm run build",
     "start": "node dist/index.js",
-    "prepare": "husky install",
-    "test": "jest",
-    "lint": "tsc && eslint --ext .ts ./src",
-    "lint-fix": "tsc && eslint --fix --ext .ts ./src",
-    "check-types": "tsc --noEmit"
+    "prelint": "echo 'Running prelint commands' && tsc",
+    "lint": "eslint --ext .ts ./src",
+    "lint-fix": "npm run prelint && eslint --fix --ext .ts ./src",
+    "check-types": "tsc --noEmit",
+    "test": "jest"
   },
   "keywords": [],
-  "author": "",
+  "author": "vladimir-sf",
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^4.17.17",

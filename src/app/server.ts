@@ -1,6 +1,6 @@
 import express from "express";
 import AppConfig from "./appConfig";
-import helloWorldRoutes from "./routes/helloWorldRoutes";
+import UserRoutes from "./routes/UserRoutes";
 
 export default class Server {
   private readonly server: express.Application;
@@ -17,7 +17,7 @@ export default class Server {
   }
 
   private setupRoutes(): void {
-    this.server.use("/", helloWorldRoutes);
+    this.server.use("/users", UserRoutes);
   }
 
   public start(): void {
