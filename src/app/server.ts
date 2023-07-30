@@ -12,17 +12,27 @@ export default class Server {
     this.setupRoutes();
   }
 
-  private setupMiddlewares(): void {
-    this.server.use(express.json());
-  }
-
-  private setupRoutes(): void {
-    this.server.use("/users", UserRoutes);
-  }
-
   public start(): void {
     this.server.listen(this.appConfig.port, () =>
       console.log(`Server started on port ${this.appConfig.port}`),
     );
+  }
+
+  private setupMiddlewares(): void {
+    this.server.use(express.json());
+    this.setupErrorHandling();
+  }
+
+  private setupErrorHandling(): void {
+    this.server.use(
+      (err: Error, _req: express.Request, res: express.Response) => {
+        console.error(err.stack ?? "No error stack available!");
+        res.status(500).send("An error occurred!");
+      },
+    );
+  }
+
+  private setupRoutes(): void {
+    this.server.use("/users", UserRoutes);
   }
 }
