@@ -1,6 +1,9 @@
 import express from "express";
 import AppConfig from "./appConfig";
+// import swaggerUi from 'swagger-ui-express';
 import UserRoutes from "./routes/UserRoutes";
+import CommonRoutes from './routes/CommonRoutes';
+// import swaggerDocument from '../../swagger/swagger.json';
 
 export default class Server {
   private readonly server: express.Application;
@@ -10,6 +13,7 @@ export default class Server {
 
     this.setupMiddlewares();
     this.setupRoutes();
+    this.setupSwagger();
   }
 
   public start(): void {
@@ -23,6 +27,10 @@ export default class Server {
     this.setupErrorHandling();
   }
 
+  private setupSwagger(): void {
+    // @todo: setup swagger
+  }
+
   private setupErrorHandling(): void {
     this.server.use(
       (err: Error, _req: express.Request, res: express.Response) => {
@@ -34,5 +42,6 @@ export default class Server {
 
   private setupRoutes(): void {
     this.server.use("/users", UserRoutes);
+    this.server.use("/", CommonRoutes);
   }
 }

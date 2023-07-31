@@ -15,7 +15,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
     depends_on:
       - db
-    command: ["sh", "-c", "npx knex migrate:latest && npm run start"]
+    command: ["sh", "-c", "echo 'Running migrations...' && npx knex --knexfile /usr/src/app/src/app/db/knexfile.ts migrate:latest && echo 'Running seeds...' && npx knex --knexfile /usr/src/app/src/app/db/knexfile.ts seed:run && echo 'Starting the app...' && npm run start"]
 
   db:
     image: postgres

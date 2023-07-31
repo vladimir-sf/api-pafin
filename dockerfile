@@ -3,9 +3,16 @@ FROM node:18
 # Create and define working directory
 WORKDIR /app
 
-COPY package*.json ./
+# Install system dependencies required for bcrypt
+RUN apt-get update && apt-get install -y \
+    python3 \
+    make \
+    g++
 
-RUN npm install
+COPY package*.json ./
+COPY tsconfig.json ./
+
+RUN npm ci
 
 # Bundle app source by copying all source code from src
 COPY src ./src
