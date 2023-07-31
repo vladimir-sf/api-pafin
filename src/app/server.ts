@@ -2,7 +2,7 @@ import express from "express";
 import AppConfig from "./appConfig";
 // import swaggerUi from 'swagger-ui-express';
 import UserRoutes from "./routes/UserRoutes";
-import CommonRoutes from './routes/CommonRoutes';
+import CommonRoutes from "./routes/CommonRoutes";
 // import swaggerDocument from '../../swagger/swagger.json';
 
 export default class Server {
@@ -12,8 +12,6 @@ export default class Server {
     this.server = express();
 
     this.setupMiddlewares();
-    this.setupRoutes();
-    this.setupSwagger();
   }
 
   public start(): void {
@@ -24,6 +22,9 @@ export default class Server {
 
   private setupMiddlewares(): void {
     this.server.use(express.json());
+    this.setupRoutes();
+    this.setupSwagger();
+    // ensure that it is the last to be invoked, after all routes and other middlewares.
     this.setupErrorHandling();
   }
 

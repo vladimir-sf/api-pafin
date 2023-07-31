@@ -1,3 +1,4 @@
+import "./db/db";
 import AppConfig from "./appConfig";
 import Server from "./server";
 
