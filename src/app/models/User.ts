@@ -35,7 +35,6 @@ export default class User {
     return user;
   }
 
-  // @todo: add toDb
-  // @todo: fromDb
-  // @todo: validate
+  // @todo: add toDb method
+  // @todo: add fromDb method
 }
