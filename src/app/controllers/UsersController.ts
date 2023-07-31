@@ -16,22 +16,32 @@ export default class UsersController {
   }
 
   public async create(req: IAppRequest, res: IAppResponse): Promise<void> {
-    const result = await this.usersService.create();
+    // @todo: validate body
+    const body = req.body as Record<string, number | string | Date>;
+    const result = await this.usersService.create(body);
     res.send(result);
   }
 
   public async get(req: IAppRequest, res: IAppResponse): Promise<void> {
-    const result = await this.usersService.get();
+    // @todo: validate id
+    const id = req.params.id;
+    const result = await this.usersService.get(id);
     res.send(result);
   }
 
   public async update(req: IAppRequest, res: IAppResponse): Promise<void> {
-    const result = await this.usersService.update();
+    // @todo: validate body
+    const body = req.body as Record<string, number | string | Date>;
+    // @todo: validate id
+    const id = req.params.id;
+    const result = await this.usersService.update(id, body);
     res.send(result);
   }
 
   public async delete(req: IAppRequest, res: IAppResponse): Promise<void> {
-    const result = await this.usersService.delete();
+    // @todo: validate id
+    const id = req.params.id;
+    const result = await this.usersService.delete(id);
     res.send(result);
   }
 }
