@@ -18,6 +18,7 @@ export default class UsersController {
   }
 
   public async list(req: IAppRequest, res: IAppResponse): Promise<void> {
+    // @todo: delete password from the result
     const result = await this.usersService.list();
     if (!result || result.length === 0) {
       res.status(404).send({ message: "No users found" });
@@ -45,6 +46,7 @@ export default class UsersController {
   }
 
   public async get(req: IAppRequest, res: IAppResponse): Promise<void> {
+    // @todo: delete password from the result
     const id = req.params.id;
     const idValidationResult = CommonValidation.validateUUID(id);
     if (idValidationResult.error) {
@@ -61,6 +63,7 @@ export default class UsersController {
   }
 
   public async update(req: IAppRequest, res: IAppResponse): Promise<void> {
+    // @todo: allow to update only name and email
     const body = req.body as Record<string, number | string | Date>;
     if (!body) {
       res.status(400).send({ message: "Missing request body" });
