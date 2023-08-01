@@ -19,6 +19,10 @@ export default class UsersController {
 
   public async list(req: IAppRequest, res: IAppResponse): Promise<void> {
     const result = await this.usersService.list();
+    if (!result || result.length === 0) {
+      res.status(404).send({ message: "No users found" });
+      return;
+    }
     res.send(result);
   }
 
@@ -49,6 +53,10 @@ export default class UsersController {
     }
 
     const result = await this.usersService.get(id);
+    if (!result) {
+      res.status(404).send({ message: "User not found" });
+      return;
+    }
     res.send(result);
   }
 

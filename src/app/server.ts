@@ -1,11 +1,12 @@
 import express from "express";
 import AppConfig from "./appConfig";
 import { expressjwt } from "express-jwt";
-// import swaggerUi from 'swagger-ui-express';
+import swaggerUi from "swagger-ui-express";
+import swaggerJsdoc from "swagger-jsdoc";
 import UserRoutes from "./routes/UserRoutes";
 import CommonRoutes from "./routes/CommonRoutes";
 import AuthRoutes from "./routes/AuthRoutes";
-// import swaggerDocument from '../../swagger/swagger.json';
+import swaggerDocument from "./swagger/swagger.json";
 
 export default class Server {
   private readonly server: express.Application;
@@ -34,8 +35,36 @@ export default class Server {
     this.setupErrorHandling();
   }
 
+  // @todo: mv to ./middlewares
   private setupSwagger(): void {
-    // @todo: setup swagger
+    const options = {
+      definition: {
+        openapi: "3.1.0",
+        info: {
+          title: "pafin api",
+          version: "1.0.0",
+        },
+      },
+      apis: ["./src/app/routes/**/*.ts"],
+      tags: [
+        {
+          name: "Authentication",
+          description: "Endpoints related to user authentication",
+        },
+        {
+          name: "Users",
+          description: "Endpoints related to user management",
+        },
+      ],
+    };
+
+    const specs = swaggerJsdoc(options) as SwaggerSpecs;
+    const combinedSpecs = { ...swaggerDocument, paths: specs.paths };
+    this.server.use(
+      "/api-docs",
+      swaggerUi.serve,
+      swaggerUi.setup(combinedSpecs),
+    );
   }
 
   private setupErrorHandling(): void {
@@ -57,17 +86,25 @@ export default class Server {
     const jwtMiddleware = expressjwt({
       secret: this.appConfig.jwtSecret,
       algorithms: ["HS256"],
-    }).unless({ path: ["/", "/auth/login", "/auth/register"] });
+    }).unless({
+      path: ["/", "/auth/login", "/auth/register", /^\/api-docs\/.*/],
+    });
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.server.use(jwtMiddleware);
   }
 
   // @todo: find another way to pass the appConfig to the controllers
-  // potential problem: req logging will expose the appConfig
+  // @todo: probably the best way is to use a dependency injection framework
+  // @todo: we should rename it; we are not setting up the context, we are adding appConfig
+  // POTENTIAL PROBLEM: if we log req it will expose the appConfig
   private setupContext(): void {
     this.server.use((req, res, next) => {
       Object.assign(req, { appConfig: this.appConfig });
       next();
     });
   }
+}
+
+interface SwaggerSpecs {
+  paths: object;
 }

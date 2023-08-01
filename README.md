@@ -25,6 +25,38 @@ The project is organized into several folders to help keep the codebase clean an
 
 By structuring the project in this way, we can separate concerns, making the codebase easier to understand and maintain. Each part of the application has a specific job, and its implementation is kept separate from other parts.
 
+## API Documentation
+This application uses Swagger UI for API documentation.
+
+### Getting Started with Swagger
+The documentation is available at the `/api-docs` endpoint after you start the application. For example, if you are
+running the application locally, you can access the documentation, for example, `http://localhost:3000/api-docs`.
+
+### Protected API Endpoints
+Most of the API endpoints are protected and require a valid JWT (JSON Web Token) to access. The JWT should be included in the Authorization header of your HTTP requests. The format should be:
+```bash
+Authorization: Bearer your_jwt
+```
+### Unprotected Endpoints
+The following endpoints are not protected and do not require a JWT:
+
+- `/login`: Authenticate with the server and receive a JWT.
+- `/register`: Register a new user.
+- `/api-docs`: View the Swagger UI documentation for the API.
+
+#### Register a User
+To interact with the protected endpoints, you must first register a new user with the `/register` endpoint. This endpoint requires a JSON body with a name, email, and password.
+
+#### Authenticate to Receive a JWT
+After registering, you can authenticate with the `/login` endpoint using the email and password you registered with. This will return a JWT.
+
+#### Accessing Protected Endpoints
+Once you have a JWT, you can access the protected endpoints by including the JWT in the Authorization header of your HTTP requests.
+
+#### Token Expiration
+The issued JWTs have a limited lifetime, after which they expire and are no longer valid. When a token expires, you can obtain a new one by re-authenticating with the /login endpoint.
+
+
 ## Prerequisites
 
 - Docker (https://docs.docker.com/get-docker/)
