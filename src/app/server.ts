@@ -23,11 +23,11 @@ export default class Server {
   }
 
   private setupMiddlewares(): void {
+    this.server.use(express.json());
     // ensure that jwt is set up before any routes
     this.setupJwt();
     this.setupContext();
 
-    this.server.use(express.json());
     this.setupRoutes();
     this.setupSwagger();
     // ensure that it is the last to be invoked, after all routes and other middlewares.
