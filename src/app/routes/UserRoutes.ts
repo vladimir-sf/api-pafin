@@ -8,6 +8,8 @@ const usersController = new UsersController();
  * @swagger
  * /users:
  *  get:
+ *    security:
+ *      - BearerAuth: []
  *    tags:
  *      - Users
  *    summary: Get a list of all users
@@ -31,6 +33,8 @@ router.get("/", (req, res, next) => {
  * @swagger
  * /users/{id}:
  *  get:
+ *    security:
+ *      - BearerAuth: []
  *    tags:
  *      - Users
  *    summary: Get a user by ID
@@ -63,6 +67,8 @@ router.get("/:id", (req, res, next) => {
  * @swagger
  * /users:
  *  post:
+ *    security:
+ *      - BearerAuth: []
  *    tags:
  *      - Users
  *    summary: Create a new user
@@ -100,6 +106,8 @@ router.post("/", (req, res, next) => {
  * @swagger
  * /users/{id}:
  *  put:
+ *    security:
+ *      - BearerAuth: []
  *    tags:
  *      - Users
  *    summary: Update a user by ID
@@ -130,6 +138,8 @@ router.post("/", (req, res, next) => {
  *              $ref: '#/components/schemas/User'
  *      '400':
  *        description: Missing request body, invalid UUID provided or validation error
+ *      '404':
+ *        description: User not found
  *      '500':
  *        description: Internal server error
  */
@@ -142,6 +152,8 @@ router.put("/:id", (req, res, next) => {
  * @swagger
  * /users/{id}:
  *  delete:
+ *    security:
+ *      - BearerAuth: []
  *    tags:
  *      - Users
  *    summary: Delete a user by ID

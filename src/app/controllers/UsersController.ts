@@ -82,6 +82,11 @@ export default class UsersController {
       res.status(400).send(idValidationResult.error.details);
       return;
     }
+    const userFromDb = await this.usersService.get(id);
+    if (!userFromDb) {
+      res.status(404).send({ message: "User not found" });
+      return;
+    }
 
     const result = await this.usersService.update(id, user);
     res.send(result);

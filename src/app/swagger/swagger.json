@@ -5,6 +5,13 @@
     "version": "1.0.0"
   },
   "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
     "schemas": {
       "User": {
         "type": "object",
