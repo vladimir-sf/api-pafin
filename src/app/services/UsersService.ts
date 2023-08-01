@@ -32,12 +32,9 @@ export default class UsersService implements IUserService {
     }
   }
 
-  public async create(
-    obj: Record<string, number | string | Date>,
-  ): Promise<User> {
+  public async create(obj: User): Promise<User> {
     try {
-      const dbUser = User.fromAny(obj);
-      const newUser = await UserModel.query().insertAndFetch(dbUser.toDb());
+      const newUser = await UserModel.query().insertAndFetch(obj.toDb());
       return User.fromDb(newUser);
     } catch (ex) {
       if (ex instanceof Error) {
@@ -48,15 +45,11 @@ export default class UsersService implements IUserService {
     }
   }
 
-  public async update(
-    id: string,
-    obj: Record<string, number | string | Date>,
-  ): Promise<User> {
+  public async update(id: string, obj: User): Promise<User> {
     try {
-      const dbUser = User.fromAny(obj);
       const updatedUser = await UserModel.query().patchAndFetchById(
         id,
-        dbUser.toDb(),
+        obj.toDb(),
       );
 
       return User.fromDb(updatedUser);

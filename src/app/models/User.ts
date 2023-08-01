@@ -1,4 +1,7 @@
 import UserModel from "../db/models/UserModel";
+import Joi from "joi";
+import { OperationType } from "../common/CommonValidationDefinitions";
+
 interface UserProps {
   id?: string;
   name?: string;
@@ -34,11 +37,11 @@ export default class User {
     if (props.password !== undefined) {
       user.password = props.password;
     }
-
+    // @todo: verify if this is necessary
     if (props.createdAt !== undefined) {
       user.createdAt = props.createdAt;
     }
-
+    // @todo: verify if this is necessary
     if (props.updatedAt !== undefined) {
       user.updatedAt = props.updatedAt;
     }
@@ -60,6 +63,23 @@ export default class User {
       updatedAt: this.updatedAt,
     };
   }
-  // @todo: add toDb method
-  // @todo: add fromDb method
+
+  public validate(operation: OperationType): Joi.ValidationResult {
+    let schema = Joi.object({
+      id: Joi.string().guid().optional(),
+      name: Joi.string().min(1).max(255).optional(),
+      email: Joi.string().min(1).max(255).email().optional(),
+      password: Joi.string().min(1).max(255).optional(),
+      createdAt: Joi.date().optional(),
+      updatedAt: Joi.date().optional(),
+    });
+
+    if (operation === OperationType.CREATE) {
+      schema = schema.fork(["name", "email", "password"], (schema) =>
+        schema.required(),
+      );
+    }
+
+    return schema.validate(this, { allowUnknown: true, abortEarly: false });
+  }
 }

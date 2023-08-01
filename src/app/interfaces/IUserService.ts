@@ -16,21 +16,18 @@ export default interface IUserService {
 
   /**
    * Method to create a user
-   * @param {Record<string, number | string | Date>} obj
+   * @param {User} obj
    * @returns {Promise<User>}
    */
-  create(obj: Record<string, number | string | Date>): Promise<User>;
+  create(obj: User): Promise<User>;
 
   /**
    * Method to update a user
    * @param {string} id
-   * @param {Record<string, number | string | Date>} obj
+   * @param {User} obj
    * @returns {Promise<User>}
    */
-  update(
-    id: string,
-    obj: Record<string, number | string | Date>,
-  ): Promise<User>;
+  update(id: string, obj: User): Promise<User>;
 
   /**
    * Method to delete a user by id
