@@ -67,7 +67,7 @@ export default class User {
   public validate(operation: OperationType): Joi.ValidationResult {
     let schema = Joi.object({
       id: Joi.string().guid().optional(),
-      name: Joi.string().min(1).max(255).optional(),
+      name: Joi.string().min(10).max(255).optional(),
       email: Joi.string().min(1).max(255).email().optional(),
       password: Joi.string().min(1).max(255).optional(),
       createdAt: Joi.date().optional(),

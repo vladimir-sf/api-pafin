@@ -3,6 +3,8 @@ import "./db/db";
 import AppConfig from "./appConfig";
 import Server from "./server";
 
+// @todo: consider using a dependency injection framework
+// @todo: consider using an inversion of control framework
 export default class App {
   private readonly appConfig: AppConfig;
   private readonly server: Server;

@@ -1,8 +1,10 @@
 import express from "express";
 import AppConfig from "./appConfig";
+import { expressjwt } from "express-jwt";
 // import swaggerUi from 'swagger-ui-express';
 import UserRoutes from "./routes/UserRoutes";
 import CommonRoutes from "./routes/CommonRoutes";
+import AuthRoutes from "./routes/AuthRoutes";
 // import swaggerDocument from '../../swagger/swagger.json';
 
 export default class Server {
@@ -21,6 +23,10 @@ export default class Server {
   }
 
   private setupMiddlewares(): void {
+    // ensure that jwt is set up before any routes
+    this.setupJwt();
+    this.setupContext();
+
     this.server.use(express.json());
     this.setupRoutes();
     this.setupSwagger();
@@ -42,7 +48,26 @@ export default class Server {
   }
 
   private setupRoutes(): void {
-    this.server.use("/users", UserRoutes);
     this.server.use("/", CommonRoutes);
+    this.server.use("/auth", AuthRoutes);
+    this.server.use("/users", UserRoutes);
+  }
+
+  private setupJwt(): void {
+    const jwtMiddleware = expressjwt({
+      secret: this.appConfig.jwtSecret,
+      algorithms: ["HS256"],
+    }).unless({ path: ["/", "/auth/login", "/auth/register"] });
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    this.server.use(jwtMiddleware);
+  }
+
+  // @todo: find another way to pass the appConfig to the controllers
+  // potential problem: req logging will expose the appConfig
+  private setupContext(): void {
+    this.server.use((req, res, next) => {
+      Object.assign(req, { appConfig: this.appConfig });
+      next();
+    });
   }
 }

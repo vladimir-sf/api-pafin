@@ -175,3 +175,31 @@ We may want to move the database seeding process (i.e., `knex:seed:run`) out of 
 To manually run seeds in docker container, you could use the following command:
 ```bash
 npm run knex:seed:run
+```
+
+### Reconsider Input Validation Strategy
+Currently, in our application, we follow a multi-tier validation strategy:
+
+#### Common Validation Definitions (/app/common/CommonValidationDefinitions)
+This is where we keep the validation logic for common data types used across multiple models, such as emails, passwords, and UUIDs. Centralizing these common validation rules helps us avoid code duplication and maintain consistency in how we treat these data types across our application.
+
+Example usage:
+```typescript
+import { validateEmail } from '../common/CommonValidationDefinitions';
+const validationResult = validateEmail(userEmail);
+```
+
+#### Model-Specific Validations (/app/models/) With Context-Specific Validations
+Each of our models may have unique validation requirements. These specific rules are defined within the model itself. This design choice encourages encapsulation and makes our models more self-reliant.
+Some validation rules may apply only in certain contexts. For example, while creating a new user, certain fields like name, email, and password may be mandatory, but these same fields might be optional when updating a user's information.
+
+Such context-specific rules are defined in the model but executed based on the context by the controller/service.
+
+Example usage:
+```typescript
+import User from '../models/User';
+import { OperationType } from './CommonValidationDefinitions';
+
+const user = User.fromAny(req.body);
+const validationResult = user.validate(OperationType.CREATE);
+```

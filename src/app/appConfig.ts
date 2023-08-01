@@ -9,6 +9,7 @@ export default class AppConfig {
   private constructor() {
     this.config = Object.freeze({
       port: Number(process.env.PORT) || 3000,
+      jwtSecret: process.env.JWT_SECRET || "secret",
     });
   }
 
@@ -22,5 +23,9 @@ export default class AppConfig {
 
   public get port(): number {
     return this.config.port;
+  }
+
+  public get jwtSecret(): string {
+    return this.config.jwtSecret;
   }
 }

@@ -77,4 +77,21 @@ export default class UsersService implements IUserService {
       }
     }
   }
+
+  public async getByEmail(email: string): Promise<User | null> {
+    try {
+      const dbUser = await UserModel.query().where("email", email).first();
+      return dbUser ? User.fromDb(dbUser) : null;
+    } catch (ex) {
+      if (ex instanceof Error) {
+        throw new Error(
+          `Error fetching user with [email=${email}]: ${ex.message}`,
+        );
+      } else {
+        throw new Error(
+          `An unknown error occurred fetching user with [email=${email}]`,
+        );
+      }
+    }
+  }
 }

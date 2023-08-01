@@ -6,7 +6,9 @@ import {
   CommonValidation,
   OperationType,
 } from "../common/CommonValidationDefinitions";
+import bcrypt from "bcryptjs";
 
+// @todo: consider extracting the validation logic to a separate method
 export default class UsersController {
   private readonly usersService: IUserService;
 
@@ -19,7 +21,7 @@ export default class UsersController {
     const result = await this.usersService.list();
     res.send(result);
   }
-  // @todo: consider extracting the validation logic to a separate method
+
   public async create(req: IAppRequest, res: IAppResponse): Promise<void> {
     const body = req.body as Record<string, number | string | Date>;
     if (!body) {
@@ -33,13 +35,14 @@ export default class UsersController {
       return;
     }
 
+    user.password = await bcrypt.hash(<string>user.password, 2);
     const result = await this.usersService.create(user);
     res.send(result);
   }
 
   public async get(req: IAppRequest, res: IAppResponse): Promise<void> {
     const id = req.params.id;
-    const idValidationResult = CommonValidation.validateId(id);
+    const idValidationResult = CommonValidation.validateUUID(id);
     if (idValidationResult.error) {
       res.status(400).send(idValidationResult.error.details);
       return;
@@ -56,14 +59,14 @@ export default class UsersController {
       return;
     }
     const user = User.fromAny(body);
-    const bodyValidationResult = user.validate(OperationType.CREATE);
+    const bodyValidationResult = user.validate(OperationType.UPDATE);
     if (bodyValidationResult.error) {
       res.status(400).send(bodyValidationResult.error.details);
       return;
     }
 
     const id = req.params.id;
-    const idValidationResult = CommonValidation.validateId(id);
+    const idValidationResult = CommonValidation.validateUUID(id);
     if (idValidationResult.error) {
       res.status(400).send(idValidationResult.error.details);
       return;
@@ -75,7 +78,7 @@ export default class UsersController {
 
   public async delete(req: IAppRequest, res: IAppResponse): Promise<void> {
     const id = req.params.id;
-    const idValidationResult = CommonValidation.validateId(id);
+    const idValidationResult = CommonValidation.validateUUID(id);
     if (idValidationResult.error) {
       res.status(400).send(idValidationResult.error.details);
       return;

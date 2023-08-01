@@ -35,4 +35,11 @@ export default interface IUserService {
    * @returns {Promise<string>}
    */
   delete(id: string): Promise<void>;
+
+  /**
+   * Method to get a user by email
+   * @param {string} email
+   * @returns {Promise<User | undefined>}
+   */
+  getByEmail(email: string): Promise<User | null>;
 }
